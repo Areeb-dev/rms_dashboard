@@ -1,0 +1,42 @@
+{
+  "name": "react-dashboard",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "@emotion/react": "11.7.1",
+    "@emotion/styled": "11.6.0",
+    "@mui/icons-material": "5.3.1",
+    "@mui/lab": "5.0.0-alpha.67",
+    "@mui/material": "5.3.1",
+    "@mui/styles": "5.3.0",
+    "@mui/x-data-grid": "5.4.0",
+    "@mui/x-data-grid-generator": "5.4.0",
+    "axios": "0.25.0",
+    "mdbreact": "5.2.0",
+    "mui-datatables": "4.0.0",
+    "notistack": "2.0.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-loader-spinner": "5.1.1",
+    "react-router-dom": "6.2.1",
+    "react-scripts": "4.0.0",
+    "recharts": "2.1.8"
+  },
+  "devDependencies": {
+    "@babel/runtime": "7.13.8"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

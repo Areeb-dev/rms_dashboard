@@ -1,0 +1,13 @@
+.box1 {
+  margin-top: 2px;
+  margin-left: -20px;
+  /* height: 100px; */
+  display: flex;
+  align-items: center; /* Vertical */
+  justify-content: center; /* Horizontal */
+}
+
+.box1 div {
+  color: black;
+  font-size: 1em;
+}
