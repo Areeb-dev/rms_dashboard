@@ -25,6 +25,7 @@ export default function SignIn() {
   const [spinner, setSpinner] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorCode, setErrorCode] = useState("");
+  const [errorStatus, setErrorStatu] = useState("");
 
   let navigate = useNavigate();
 
@@ -44,23 +45,22 @@ export default function SignIn() {
       .then((response) => {
         let authToken = response.data.data.x_auth_token;
         localStorage.setItem("AuthToken", authToken);
-        // setSpinner(false);
-        // navigate("./dashboard", { replace: true });
+        setSpinner(false);
+        navigate("./dashboard", { replace: true });
       })
       .catch((error) => {
-        setSpinner(false);
-        console.log({error});
-        setErrorCode(error);
+        setSpinner(false)
+        let errorMsg=error.response.data.message;
+        let errorSt=error.response.data.status;
+        setErrorStatu(errorSt)
+        setErrorCode(errorMsg);
         setIsError(true);
       });
   };
   const handleError = () => {
-    if (errorCode === "auth/invalid-email") {
-      return "Email and Password field cannot be empty.";
-    } else if (errorCode === "auth/user-not-found") {
-      return "User not found Please signup first.";
-    } else {
-      return "Invalid Credentials";
+   
+    if(errorStatus == 400){
+      return errorCode;
     }
   };
   return (
@@ -159,7 +159,7 @@ export default function SignIn() {
               )}
               {isError ? (
                 <Alert
-                  id="alertmessage"
+                  variant="outlined"
                   sx={{ color: "black", align: "center" }}
                   severity="error"
                 >
@@ -168,6 +168,7 @@ export default function SignIn() {
               ) : (
                 ""
               )}
+
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">

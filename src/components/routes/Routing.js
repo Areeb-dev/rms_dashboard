@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import SideBar from "../drawer/SideDrawer";
 import SignIn from "../signIn/SignIn";
-// import ProtectedRoute from "./ProtectedRoute"
+// import PrivateRoute from "./ProtectedRoute"
 
 function Routing() {
   return (
