@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignOut = () => {
   let navigate = useNavigate();
+  
   return (
     <List>
       <ListItem
@@ -20,7 +21,7 @@ const SignOut = () => {
         }}
       >
         <ListItemIcon>
-          <Tooltip title="LogOut" placement="right">
+          <Tooltip title="LogOut" placement="right" arrow>
             {<LogoutIcon />}
           </Tooltip>
         </ListItemIcon>

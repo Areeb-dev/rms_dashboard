@@ -16,6 +16,8 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useState } from "react";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 const style = {
   position: "absolute",
@@ -45,6 +47,7 @@ export default function ProductModal() {
   const [productName, SetProductName] = useState("");
   const [productDescription, SetProductDescription] = useState("");
   const [price, SetPrice] = useState("");
+  const [imageData, setImageData] = useState(null);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -52,15 +55,30 @@ export default function ProductModal() {
 
   const submitFormData = (e) => {
     e.preventDefault();
-    console.log(
-      `category : ${category} productName : ${productName} productDescription : ${productDescription} price : ${price}`
-    );
+    let payload = new FormData();
+    payload.append("category", category);
+    payload.append("productName", productName);
+    payload.append("productDescription", productDescription);
+    payload.append("price", price);
+    payload.append("image", imageData);
+
+    console.log(payload.get("price"));
+    SetCategory("");
+    SetProductName("");
+    SetProductDescription("");
+    SetPrice("");
   };
   // modal function
   const cancel = () => {
+    SetCategory("");
+    SetProductName("");
+    SetProductDescription("");
+    SetPrice("");
     handleClose(true);
   };
-  
+  const handleImageChange = (event) => {
+    setImageData(event.target.files[0]);
+  };
   return (
     <div>
       <Box sx={{ height: 490, transform: "translateZ(0px)", flexGrow: 1 }}>
@@ -88,16 +106,22 @@ export default function ProductModal() {
               Create Items/Products
             </Typography>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              <TextField
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
+              <Select
                 fullWidth
                 id="outlined-basic margin-none"
                 label="Category"
                 variant="outlined"
                 placeholder="Category"
+                value={category}
                 onChange={(e) => {
                   SetCategory(e.target.value);
                 }}
-              />
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
               <RedBar />
               <TextField
                 fullWidth
@@ -105,6 +129,7 @@ export default function ProductModal() {
                 label="Product Name"
                 placeholder="Product Name"
                 variant="outlined"
+                value={productName}
                 onChange={(e) => {
                   SetProductName(e.target.value);
                 }}
@@ -115,6 +140,7 @@ export default function ProductModal() {
                 id="outlined-textarea margin-none"
                 label="Product Description"
                 placeholder="Product Description"
+                value={productDescription}
                 multiline
                 onChange={(e) => {
                   SetProductDescription(e.target.value);
@@ -130,13 +156,22 @@ export default function ProductModal() {
                 startAdornment={
                   <InputAdornment position="start">PKR</InputAdornment>
                 }
+                value={price}
                 label="Price"
                 onChange={(e) => {
                   SetPrice(e.target.value);
                 }}
-                onClick={cancel}
               />
-              
+              <RedBar />
+
+              <input
+                type="file"
+                onClick={(event) => {
+                  event.target.value = null;
+                }}
+                onChange={(e) => handleImageChange(e)}
+              />
+
               <RedBar />
               <Stack direction="row" spacing={2}>
                 <Button

@@ -13,9 +13,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveAsRoundedIcon from "@mui/icons-material/SaveAsRounded";
 import Stack from "@mui/material/Stack";
 import InputLabel from "@mui/material/InputLabel";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import constant from "../../config/constant";
+import axios from "axios";
+import { Alert } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 const style = {
   position: "absolute",
   top: "50%",
@@ -26,34 +30,89 @@ const style = {
   border: "1px solid white",
   boxShadow: 2,
   p: 4,
-  borderRadius: "10px"
+  borderRadius: "10px",
 };
 function RedBar() {
   return (
     <Box
       sx={{
         height: 20,
-        backgroundColor: "white"
+        backgroundColor: "white",
       }}
     />
   );
 }
 export default function CategoryModal() {
   //modal data
-  const [parentcategory, setParentCategory] = useState("");
+  const [parentCategory, setParentCategory] = useState("");
   const [category, SetCategory] = useState("");
+  const [parentcategoryData, setParentCategoryData] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [errorCode, setErrorCode] = useState("");
+  const [errorStatus, setErrorStatu] = useState("");
+  const [spinner, setSpinner] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  let baseUrl = constant.baseUrl;
+  let getAuthToken = localStorage.getItem("AuthToken");
+  
   const submitFormData = (e) => {
     e.preventDefault();
-    console.log(`category : ${category} parentcategory :${parentcategory}`);
+    setSpinner(true);
+    axios
+      .post(
+        `${baseUrl}/category`,
+        {
+          parentCategory: parentCategory,
+          name: category,
+        },
+        {
+          headers: {
+            x_auth_token: getAuthToken,
+          },
+        }
+      )
+      .then((response) => {
+        setSpinner(false);
+      })
+      .catch((error) => {
+        setSpinner(false);
+        let errorMsg = error.response.data.message;
+        let errorSt = error.response.data.status;
+        setErrorStatu(errorSt);
+        setErrorCode(errorMsg);
+        setIsError(true);
+      });
   };
   const cancel = () => {
+    setParentCategory("''");
+    SetCategory("");
     handleClose(true);
   };
-
+  const handleError = () => {
+    if (errorStatus == 400) {
+      return errorCode;
+    }
+  };
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/category`, {
+        headers: {
+          x_auth_token: getAuthToken,
+        },
+      })
+      .then((response) => {
+        // handle success
+        setParentCategoryData(response.data.data);
+        // console.log(response.data.data);
+        // console.log(parentcategoryData);
+      })
+      .catch((error) => {
+        // handle error
+        console.log(error);
+      });
+  }, []);
   return (
     <div>
       <Box sx={{ height: 490, transform: "translateZ(0px)", flexGrow: 1 }}>
@@ -63,7 +122,7 @@ export default function CategoryModal() {
           sx={{
             position: "absolute",
             bottom: 16,
-            right: 16
+            right: 16,
           }}
           icon={<SpeedDialIcon openIcon={<EditIcon />} />}
         ></SpeedDial>
@@ -76,7 +135,7 @@ export default function CategoryModal() {
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
-          timeout: 500
+          timeout: 500,
         }}
       >
         <Fade in={open}>
@@ -92,15 +151,19 @@ export default function CategoryModal() {
                 fullWidth
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={parentcategory}
+                value={parentCategory}
                 label="Parent Category"
                 onChange={(e) => {
                   setParentCategory(e.target.value);
                 }}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {parentcategoryData.map((parentcat, index) => {
+                  return (
+                    <MenuItem key={index} value={parentcat._id}>
+                      {parentcat.name}
+                    </MenuItem>
+                  );
+                })}
               </Select>
               <RedBar />
               <TextField
@@ -108,6 +171,7 @@ export default function CategoryModal() {
                 id="outlined-basic margin-none"
                 label="Category"
                 variant="outlined"
+                value={category}
                 placeholder="Category"
                 onChange={(e) => {
                   SetCategory(e.target.value);
@@ -123,14 +187,47 @@ export default function CategoryModal() {
                 >
                   Clear
                 </Button>
-                <Button
+                {/* <Button
                   onClick={submitFormData}
                   variant="contained"
                   endIcon={<SaveAsRoundedIcon />}
                 >
                   Save
-                </Button>
+                </Button> */}
+                {spinner ? (
+                  <LoadingButton
+                    type="submit"
+                    loading
+                    loadingPosition="start"
+                    startIcon="Sign In"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Save
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    onClick={submitFormData}
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Save
+                  </Button>
+                )}
               </Stack>
+              <RedBar />
+              {isError ? (
+                <Alert
+                  variant="outlined"
+                  sx={{ color: "black", align: "center" }}
+                  severity="error"
+                >
+                  {handleError()}
+                </Alert>
+              ) : (
+                ""
+              )}
             </Typography>
           </Box>
         </Fade>

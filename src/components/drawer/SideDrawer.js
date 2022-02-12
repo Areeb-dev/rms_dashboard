@@ -30,6 +30,7 @@ import { useState } from "react";
 import SignOut from "../signOut/SignOut";
 import CategoryIcon from "@mui/icons-material/Category";
 import Category from "../pages/Category";
+import FadeMenu from "../profileMenu/FadeMenu";
 
 const drawerWidth = 220;
 
@@ -136,7 +137,7 @@ function SideBar() {
         open={open}
         sx={{ color: "black", backgroundColor: "#FFCA40" }}
       >
-        <Toolbar>
+        {/* <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -150,8 +151,34 @@ function SideBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
+            Restaurant Management 
+          </Typography>
+          <Typography variant="h6" noWrap component="div">
+            Restaurant Management 
+          </Typography>
+        </Toolbar>
+        */}
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              marginRight: "36px",
+              ...(open && { display: "none" }),
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, textAlign: "center" }}
+          >
             Restaurant Management
           </Typography>
+          <FadeMenu />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -172,7 +199,7 @@ function SideBar() {
             onClick={() => setComponent("dashboard")}
           >
             <ListItemIcon>
-              <Tooltip title="Dashboard" placement="right">
+              <Tooltip title="Dashboard" placement="right" arrow>
                 {<GridViewIcon />}
               </Tooltip>
             </ListItemIcon>
@@ -186,7 +213,7 @@ function SideBar() {
             onClick={() => setComponent("product")}
           >
             <ListItemIcon>
-              <Tooltip title="Product" placement="right">
+              <Tooltip title="Product" placement="right" arrow>
                 {<AddShoppingCartIcon />}
               </Tooltip>
             </ListItemIcon>
@@ -200,7 +227,7 @@ function SideBar() {
             onClick={() => setComponent("category")}
           >
             <ListItemIcon>
-              <Tooltip title="Category" placement="right">
+              <Tooltip title="Category" placement="right" arrow>
                 {<CategoryIcon />}
               </Tooltip>
             </ListItemIcon>
@@ -210,7 +237,7 @@ function SideBar() {
         <List>
           <ListItem button key="Orders" onClick={() => setComponent("order")}>
             <ListItemIcon>
-              <Tooltip title="Orders" placement="right">
+              <Tooltip title="Orders" placement="right" arrow>
                 {<LocalShippingIcon />}
               </Tooltip>
             </ListItemIcon>
@@ -220,7 +247,7 @@ function SideBar() {
         <List>
           <ListItem button key="User" onClick={() => setComponent("user")}>
             <ListItemIcon>
-              <Tooltip title="User" placement="right">
+              <Tooltip title="User" placement="right" arrow>
                 {<PersonAdd />}
               </Tooltip>
             </ListItemIcon>
@@ -234,7 +261,7 @@ function SideBar() {
             onClick={() => setComponent("message")}
           >
             <ListItemIcon>
-              <Tooltip title="Message" placement="right">
+              <Tooltip title="Message" placement="right" arrow>
                 {<MailIcon />}
               </Tooltip>
             </ListItemIcon>

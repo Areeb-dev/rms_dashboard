@@ -49,17 +49,16 @@ export default function SignIn() {
         navigate("./dashboard", { replace: true });
       })
       .catch((error) => {
-        setSpinner(false)
-        let errorMsg=error.response.data.message;
-        let errorSt=error.response.data.status;
-        setErrorStatu(errorSt)
+        setSpinner(false);
+        let errorMsg = error.response.data.message;
+        let errorSt = error.response.data.status;
+        setErrorStatu(errorSt);
         setErrorCode(errorMsg);
         setIsError(true);
       });
   };
   const handleError = () => {
-   
-    if(errorStatus == 400){
+    if (errorStatus == 400) {
       return errorCode;
     }
   };
@@ -73,7 +72,9 @@ export default function SignIn() {
           sm={4}
           md={7}
           sx={{
+            // backgroundImage:{burgerImage},
             backgroundImage: "url(https://source.unsplash.com/random)",
+            alt: "burger image",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -129,10 +130,10 @@ export default function SignIn() {
                   setPassword(e.target.value);
                 }}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
-              />
+              /> */}
               {spinner ? (
                 <LoadingButton
                   type="submit"
