@@ -15,9 +15,14 @@ import Stack from "@mui/material/Stack";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import axios from "axios";
+import constant from "../../config/constant";
+import { Alert } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Fab from "@mui/material/Fab";
 
 const style = {
   position: "absolute",
@@ -47,26 +52,69 @@ export default function ProductModal() {
   const [productName, SetProductName] = useState("");
   const [productDescription, SetProductDescription] = useState("");
   const [price, SetPrice] = useState("");
-  const [imageData, setImageData] = useState(null);
-
+  const [imageData, setImageData] = useState("");
+  const [parentcategoryData, setParentCategoryData] = useState([]);
+  const [spinner, setSpinner] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorCode, setErrorCode] = useState("");
+  const [errorStatus, setErrorStatu] = useState("");
+  const [issuccess, setIsSuccess] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  let baseUrl = constant.baseUrl;
+  let getAuthToken = localStorage.getItem("AuthToken");
+  useEffect(() => {
+    axios
+      .get(`${baseUrl}/category`, {
+        headers: {
+          x_auth_token: getAuthToken,
+        },
+      })
+      .then((response) => {
+        setParentCategoryData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+  const handleImageChange = (event) => {
+    setImageData(event.target.files[0]);
+  };
   const submitFormData = (e) => {
     e.preventDefault();
+    setSpinner(true);
     let payload = new FormData();
-    payload.append("category", category);
-    payload.append("productName", productName);
-    payload.append("productDescription", productDescription);
+    payload.append("name", productName);
+    payload.append("categoryId", category);
+    payload.append("description", productDescription);
     payload.append("price", price);
     payload.append("image", imageData);
-
-    console.log(payload.get("price"));
-    SetCategory("");
-    SetProductName("");
-    SetProductDescription("");
-    SetPrice("");
+    axios
+      .post(`${baseUrl}/product`, payload, {
+        headers: {
+          x_auth_token: getAuthToken,
+        },
+      })
+      .then((response) => {
+        setSpinner(false);
+        setIsSuccess(true);
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        setSpinner(false);
+        let errorMsg = error.response.data.message;
+        let errorSt = error.response.data.status;
+        setErrorStatu(errorSt);
+        setErrorCode(errorMsg);
+        setIsError(true);
+      });
+  };
+  const handleError = () => {
+    if (errorStatus == 400) {
+      return errorCode;
+    }
   };
   // modal function
   const cancel = () => {
@@ -76,19 +124,21 @@ export default function ProductModal() {
     SetPrice("");
     handleClose(true);
   };
-  const handleImageChange = (event) => {
-    setImageData(event.target.files[0]);
-  };
+
   return (
     <div>
-      <Box sx={{ height: 490, transform: "translateZ(0px)", flexGrow: 1 }}>
-        <SpeedDial
-          onClick={handleOpen}
-          ariaLabel="SpeedDial openIcon example"
-          sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<SpeedDialIcon openIcon={<EditIcon />} />}
-        ></SpeedDial>
-      </Box>
+      <Fab
+        onClick={handleOpen}
+        variant="circular"
+        color="primary"
+        sx={{
+          position: "absolute",
+          bottom: (theme) => theme.spacing(10),
+          right: (theme) => theme.spacing(5),
+        }}
+      >
+        <SpeedDialIcon />
+      </Fab>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -118,9 +168,13 @@ export default function ProductModal() {
                   SetCategory(e.target.value);
                 }}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                {parentcategoryData.map((parentcat, index) => {
+                  return (
+                    <MenuItem key={index} value={parentcat._id}>
+                      {parentcat.name}
+                    </MenuItem>
+                  );
+                })}
               </Select>
               <RedBar />
               <TextField
@@ -181,14 +235,49 @@ export default function ProductModal() {
                 >
                   Clear
                 </Button>
-                <Button
-                  onClick={submitFormData}
-                  variant="contained"
-                  endIcon={<SaveAsRoundedIcon />}
-                >
-                  Save
-                </Button>
+
+                {spinner ? (
+                  <LoadingButton
+                    type="submit"
+                    loading
+                    loadingPosition="start"
+                    startIcon="Sign In"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Save
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    endIcon={<SaveAsRoundedIcon />}
+                    onClick={submitFormData}
+                    type="submit"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                  >
+                    Save
+                  </Button>
+                )}
               </Stack>
+              <RedBar />
+              {isError ? (
+                <Alert
+                  variant="outlined"
+                  sx={{ color: "black", align: "center" }}
+                  severity="error"
+                >
+                  {handleError()}
+                </Alert>
+              ) : (
+                ""
+              )}
+              {issuccess ? (
+                <Alert severity="success" color="success">
+                  Product Create Successfully
+                </Alert>
+              ) : (
+                ""
+              )}
             </Typography>
           </Box>
         </Fade>

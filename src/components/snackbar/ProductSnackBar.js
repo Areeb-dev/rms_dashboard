@@ -1,35 +1,26 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
-import Slide from "@mui/material/Slide";
+import React from 'react';
+import Button from '@mui/material/Button';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
-function TransitionLeft(props) {
-  return <Slide {...props} direction="left" />;
+function Snackbar() {
+  const { enqueueSnackbar } = useSnackbar();
+
+ ( function handleClick  () {
+    enqueueSnackbar('Product Create Succesfully...');
+  })()
+
+  
+  return (
+    <React.Fragment>
+      <Button onClick={handleClick}>Show snackbar</Button>
+    </React.Fragment>
+  );
 }
 
-export default function DirectionSnackbar() {
-  const [open, setOpen] = React.useState(false);
-  const [transition, setTransition] = React.useState(undefined);
-
-  const handleClick = (Transition) => () => {
-    setTransition(() => Transition);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+export default function SimpleSnackbar() {
   return (
-    <div>
-      <Button onClick={handleClick(TransitionLeft)}>Right</Button>
-      <Snackbar
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={transition}
-        message="I love snacks"
-        key={transition ? transition.name : ""}
-      />
-    </div>
+    <SnackbarProvider maxSnack={3}>
+      <Snackbar />
+    </SnackbarProvider>
   );
 }

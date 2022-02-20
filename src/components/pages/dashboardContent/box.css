@@ -1,10 +1,9 @@
 .box1 {
   margin-top: 2px;
   margin-left: -20px;
-  /* height: 100px; */
   display: flex;
-  align-items: center; /* Vertical */
-  justify-content: center; /* Horizontal */
+  align-items: center; 
+  justify-content: center; 
 }
 
 .box1 div {

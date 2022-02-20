@@ -15,7 +15,7 @@ export default function Dashboard() {
             display: "flex",
             flexDirection: "column",
             height: 180,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <BoxOne />
@@ -29,7 +29,7 @@ export default function Dashboard() {
             display: "flex",
             flexDirection: "column",
             height: 180,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <BoxOne />
@@ -43,7 +43,7 @@ export default function Dashboard() {
             display: "flex",
             flexDirection: "column",
             height: 180,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <BoxOne />
@@ -57,7 +57,7 @@ export default function Dashboard() {
             display: "flex",
             flexDirection: "column",
             height: 180,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <BoxOne />
@@ -73,7 +73,7 @@ export default function Dashboard() {
             flexDirection: "column",
             borderRadius: "20px",
             height: 245,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <Chart />
@@ -88,7 +88,7 @@ export default function Dashboard() {
             display: "flex",
             flexDirection: "column",
             height: 245,
-            backgroundColor: "yellow"
+            boxShadow: "2px 12px 50px #836b6b",
           }}
         >
           <BoxOne />

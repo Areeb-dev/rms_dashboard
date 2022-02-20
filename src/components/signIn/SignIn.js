@@ -45,6 +45,7 @@ export default function SignIn() {
       .then((response) => {
         let authToken = response.data.data.x_auth_token;
         localStorage.setItem("AuthToken", authToken);
+        localStorage.setItem("UserEmail", response.data.data.email);
         setSpinner(false);
         navigate("./dashboard", { replace: true });
       })

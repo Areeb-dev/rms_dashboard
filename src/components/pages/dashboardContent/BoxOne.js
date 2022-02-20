@@ -4,7 +4,15 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import List from "@mui/material/List";
+import Typography from "@mui/material/Typography";
+
 import "./box.css";
+import { styled } from "@mui/material/styles";
+const Div = styled("div")(({ theme }) => ({
+  ...theme.typography.button,
+  backgroundColor: theme.palette.background.paper,
+  padding: theme.spacing(1),
+}));
 
 const BoxOne = () => {
   return (
@@ -14,20 +22,17 @@ const BoxOne = () => {
           marginLeft: "90%",
           marginTop: "0",
           color: "#000",
-          fontSize: 30
+          fontSize: 30,
         }}
       />
-      <List class="box1">
-        <ListItem>
-          <ListItemIcon>
-            <ShoppingBasketIcon />
-          </ListItemIcon>
-          <div>
-            <ListItemText primary="TOTAL ORDERS" />
-          </div>
-        </ListItem>
-      </List>
-      <h4>21,735</h4>
+      <Div>
+        <Typography variant="body2" gutterBottom>
+          Hello World
+          <br />
+          Hello world
+        </Typography>
+      </Div>
+     
     </>
   );
 };

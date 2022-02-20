@@ -137,27 +137,6 @@ function SideBar() {
         open={open}
         sx={{ color: "black", backgroundColor: "#FFCA40" }}
       >
-        {/* <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Restaurant Management 
-          </Typography>
-          <Typography variant="h6" noWrap component="div">
-            Restaurant Management 
-          </Typography>
-        </Toolbar>
-        */}
         <Toolbar>
           <IconButton
             color="inherit"
@@ -181,7 +160,7 @@ function SideBar() {
           <FadeMenu />
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open} >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (
@@ -191,7 +170,7 @@ function SideBar() {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
+        <Divider sx={{pt:20}} />
         <List>
           <ListItem
             button

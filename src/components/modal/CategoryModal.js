@@ -20,6 +20,8 @@ import constant from "../../config/constant";
 import axios from "axios";
 import { Alert } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 const style = {
   position: "absolute",
   top: "50%",
@@ -50,31 +52,30 @@ export default function CategoryModal() {
   const [isError, setIsError] = useState(false);
   const [errorCode, setErrorCode] = useState("");
   const [errorStatus, setErrorStatu] = useState("");
+  const [issuccess, setIsSuccess] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   let baseUrl = constant.baseUrl;
   let getAuthToken = localStorage.getItem("AuthToken");
-  
+
   const submitFormData = (e) => {
     e.preventDefault();
     setSpinner(true);
+    let payload = {
+      parentCategory: parentCategory,
+      name: category,
+    };
     axios
-      .post(
-        `${baseUrl}/category`,
-        {
-          parentCategory: parentCategory,
-          name: category,
+      .post(`${baseUrl}/category`, payload, {
+        headers: {
+          x_auth_token: getAuthToken,
         },
-        {
-          headers: {
-            x_auth_token: getAuthToken,
-          },
-        }
-      )
+      })
       .then((response) => {
         setSpinner(false);
+        setIsSuccess(true);
       })
       .catch((error) => {
         setSpinner(false);
@@ -85,6 +86,7 @@ export default function CategoryModal() {
         setIsError(true);
       });
   };
+
   const cancel = () => {
     setParentCategory("''");
     SetCategory("");
@@ -103,30 +105,25 @@ export default function CategoryModal() {
         },
       })
       .then((response) => {
-        // handle success
         setParentCategoryData(response.data.data);
-        // console.log(response.data.data);
-        // console.log(parentcategoryData);
       })
       .catch((error) => {
-        // handle error
         console.log(error);
       });
   }, []);
   return (
     <div>
-      <Box sx={{ height: 490, transform: "translateZ(0px)", flexGrow: 1 }}>
-        <SpeedDial
-          onClick={handleOpen}
-          ariaLabel="SpeedDial openIcon example"
-          sx={{
-            position: "absolute",
-            bottom: 16,
-            right: 16,
-          }}
-          icon={<SpeedDialIcon openIcon={<EditIcon />} />}
-        ></SpeedDial>
-      </Box>
+      <Fab
+        onClick={handleOpen}
+        color="primary"
+        sx={{
+          position: "absolute",
+          bottom: (theme) => theme.spacing(10),
+          right: (theme) => theme.spacing(5),
+        }}
+      >
+        <SpeedDialIcon />
+      </Fab>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -187,13 +184,7 @@ export default function CategoryModal() {
                 >
                   Clear
                 </Button>
-                {/* <Button
-                  onClick={submitFormData}
-                  variant="contained"
-                  endIcon={<SaveAsRoundedIcon />}
-                >
-                  Save
-                </Button> */}
+
                 {spinner ? (
                   <LoadingButton
                     type="submit"
@@ -207,6 +198,7 @@ export default function CategoryModal() {
                   </LoadingButton>
                 ) : (
                   <Button
+                    endIcon={<SaveAsRoundedIcon />}
                     onClick={submitFormData}
                     type="submit"
                     variant="contained"
@@ -224,6 +216,13 @@ export default function CategoryModal() {
                   severity="error"
                 >
                   {handleError()}
+                </Alert>
+              ) : (
+                ""
+              )}
+              {issuccess ? (
+                <Alert severity="success" color="success">
+                  Category Create Successfully.
                 </Alert>
               ) : (
                 ""
